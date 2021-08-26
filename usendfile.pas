@@ -197,12 +197,12 @@ begin
     sendStr('AAAK'+calcCheckSum('AAAK'));
     sendFile;
   end else begin
-     sendStr('AANK'+calcCheckSum('AANK'));
-     Label1.Caption:='ERR: NO FILE';
+     sendStr('AANK01'+calcCheckSum('AANK01'));
+     Label1.Caption:='ERR: NO FILE '+fileName;
      fState:=INIT;
-     SerialPort.Close;
-     Sleep(500);
-     SerialPort.Open;
+     //SerialPort.Close;
+     //Sleep(500);
+     //SerialPort.Open;
      IdleTimer1.Enabled:=true;
   end;
 end;
