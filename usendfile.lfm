@@ -1,12 +1,13 @@
 object Form1: TForm1
-  Left = 524
+  Left = 1279
   Height = 574
-  Top = 220
-  Width = 741
+  Top = 230
+  Width = 719
   BorderStyle = bsSingle
   Caption = 'Laserknecht DNC-Filetransfer V 0.1'
   ClientHeight = 574
-  ClientWidth = 741
+  ClientWidth = 719
+  Color = clSkyBlue
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
@@ -95,7 +96,7 @@ object Form1: TForm1
     Left = 0
     Height = 23
     Top = 551
-    Width = 741
+    Width = 719
     Panels = <    
       item
         Width = 200
@@ -124,6 +125,15 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
+  object Button2: TButton
+    Left = 57
+    Height = 25
+    Top = 516
+    Width = 75
+    Caption = 'Show Files'
+    OnClick = Button2Click
+    TabOrder = 4
+  end
   object SerialPort: TLazSerial
     Active = False
     BaudRate = br___110
@@ -148,5 +158,10 @@ object Form1: TForm1
     OnTimer = IdleTimer1Timer
     Left = 198
     Top = 8
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'CNC-Files|*.CNC'
+    Left = 160
+    Top = 512
   end
 end

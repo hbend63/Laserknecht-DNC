@@ -16,16 +16,19 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     IdleTimer1: TIdleTimer;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
+    OpenDialog1: TOpenDialog;
     SerialPort: TLazSerial;
     sb: TStatusBar;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -74,6 +77,12 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   doSetup;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  OpenDialog1.InitialDir:=fPrgPath+'/cnc-data/';
+  OpenDialog1.Execute;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -200,9 +209,6 @@ begin
      sendStr('AANK01'+calcCheckSum('AANK01'));
      Label1.Caption:='ERR: NO FILE '+fileName;
      fState:=INIT;
-     //SerialPort.Close;
-     //Sleep(500);
-     //SerialPort.Open;
      IdleTimer1.Enabled:=true;
   end;
 end;
@@ -230,12 +236,17 @@ begin
                    sendStr(dt+calcCheckSum(dt));
                  end;
      end;
-   until i=fData.Count-1;
-   sendStr('AAEF'+calcCheckSum('AAEF'));
+   until ((i=fData.Count-1) or (fState=TIMEOUT));
+   if (fState <> TIMEOUT) then begin
+       sendStr('AAEF'+calcCheckSum('AAEF'));
+
+   end;
+   while SerialPort.DataAvailable do
+     SerialPort.ReadData;
+
    fState:=INIT;
-   SerialPort.Close;
-   Sleep(500);
-   SerialPort.Open;
+
+
    IdleTimer1.Enabled:=true;
 end;
 
