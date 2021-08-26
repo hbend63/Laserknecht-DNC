@@ -1,14 +1,15 @@
 object Form1: TForm1
-  Left = 1217
-  Height = 552
-  Top = 312
-  Width = 581
+  Left = 524
+  Height = 574
+  Top = 220
+  Width = 741
   BorderStyle = bsSingle
   Caption = 'Laserknecht DNC-Filetransfer V 0.1'
-  ClientHeight = 552
-  ClientWidth = 581
+  ClientHeight = 574
+  ClientWidth = 741
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '2.0.12.0'
   object Button1: TButton
@@ -32,7 +33,7 @@ object Form1: TForm1
     Left = 48
     Height = 186
     Top = 56
-    Width = 496
+    Width = 640
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -16
@@ -47,7 +48,7 @@ object Form1: TForm1
     Left = 48
     Height = 202
     Top = 296
-    Width = 496
+    Width = 632
     Font.CharSet = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -16
@@ -93,8 +94,8 @@ object Form1: TForm1
   object sb: TStatusBar
     Left = 0
     Height = 23
-    Top = 529
-    Width = 581
+    Top = 551
+    Width = 741
     Panels = <    
       item
         Width = 200
@@ -106,6 +107,22 @@ object Form1: TForm1
         Width = 50
       end>
     SimplePanel = False
+  end
+  object Label3: TLabel
+    Left = 480
+    Height = 25
+    Top = 520
+    Width = 203
+    Caption = '(c)2021 Knechtware'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'MV Boli'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object SerialPort: TLazSerial
     Active = False
@@ -127,6 +144,7 @@ object Form1: TForm1
     Top = 8
   end
   object IdleTimer1: TIdleTimer
+    Enabled = False
     OnTimer = IdleTimer1Timer
     Left = 198
     Top = 8

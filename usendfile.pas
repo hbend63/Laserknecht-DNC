@@ -10,7 +10,7 @@ uses
 
 type
 
-  TState = (INIT,WAITING,DATAOK,TIMEOUT);
+  TState = (CONNECTING,INIT,WAITING,DATAOK,TIMEOUT);
 
   { TForm1 }
 
@@ -19,6 +19,7 @@ type
     IdleTimer1: TIdleTimer;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
     SerialPort: TLazSerial;
@@ -27,9 +28,9 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure IdleTimer1Timer(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure waitTimerTimer(Sender: TObject);
   private
     fprgPath: string;
     fSerialAnswer: string;
@@ -44,6 +45,7 @@ type
     procedure sendFile;
     procedure sendStr(s: string);
     procedure readData;
+    procedure connect;
   public
 
   end;
@@ -63,17 +65,10 @@ begin
     CreateDir(fPrgPath+'/cnc-data');
   fData:=TStringList.Create;
   readSetupParams;
-  fState:=INIT;
+  fState:=CONNECTING;
   fBlink:=false;
-  if (not Application.Terminated) then begin
-    Memo1.Lines.Clear;
-    SerialPort.Open;
-    //Sleep(2000);
-    if (SerialPort.Active) then
-      sb.Panels[0].Text:='CONNECTED'
-    else
-      sb.Panels[0].Text:='DISCONNECTED';
-  end;
+  if not Application.terminated then
+    connect;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -85,6 +80,11 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   fData.Free;
   SerialPort.Close;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.IdleTimer1Timer(Sender: TObject);
@@ -104,11 +104,6 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   fState:=TIMEOUT;
-end;
-
-procedure TForm1.waitTimerTimer(Sender: TObject);
-begin
-
 end;
 
 function TForm1.calcChecksum(s: string): char;
@@ -210,7 +205,6 @@ begin
      SerialPort.Open;
      IdleTimer1.Enabled:=true;
   end;
-
 end;
 
 procedure TForm1.sendFile;
@@ -258,7 +252,7 @@ procedure TForm1.readData;
 var s: string;
     x1,x2: integer;
 begin
-  s:=SerialPort.ReadData;
+   s:=SerialPort.ReadData;
    fSerialAnswer:=fSerialAnswer+s;
    x1:=pos('A',fSerialAnswer);
    x2:=pos(#13,fSerialAnswer);
@@ -268,10 +262,23 @@ begin
           loadFile(s)
        else if (copy(fSerialAnswer,3,2)='AK') then
           fState:=DATAOK;
-       Timer1.Enabled:=false;
-       Memo2.Lines.Add('RX: '+fSerialAnswer);
      end;
+     Memo2.Lines.Add('RX: '+fSerialAnswer);
+     Timer1.Enabled:=false;
    end;
+end;
+
+procedure TForm1.connect;
+begin
+  SerialPort.Open;
+  Memo1.Lines.Clear;
+  Memo2.Lines.Clear;
+   if (SerialPort.Active) then
+      sb.Panels[0].Text:='CONNECTED'
+   else
+     sb.Panels[0].Text:='DISCONNECTED';
+   IdleTimer1.Enabled:=true;
+   fState:=INIT;
 end;
 
 end.
