@@ -10,7 +10,7 @@ uses
 
 type
 
-  TState = (CONNECTING,INIT,WAITING,DATAOK,TIMEOUT);
+  TState = (CONNECTING, INIT, LOAD, WAITING, DATAOK, TIMEOUT);
 
   { TForm1 }
 
@@ -31,7 +31,6 @@ type
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure IdleTimer1Timer(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
@@ -49,6 +48,7 @@ type
     procedure sendStr(s: string);
     procedure readData;
     procedure connect;
+    procedure reinit;
   public
 
   end;
@@ -91,23 +91,29 @@ begin
   SerialPort.Close;
 end;
 
-procedure TForm1.FormShow(Sender: TObject);
-begin
-
-end;
-
 procedure TForm1.IdleTimer1Timer(Sender: TObject);
+var leave: boolean;
 begin
-  fBlink:=not fBlink;
-  if fBlink then
-    sb.Panels[2].Text:='WAITING ..'
-  else
-    sb.Panels[2].Text:='WAITING .....';
-  sb.Invalidate;
-
-  if fState=INIT then
+  leave:=false;
+  readData;
+  if fState=INIT then begin
     if (SerialPort.DataAvailable) then
-         readData;
+    repeat
+       case fState of
+          WAITING: if (SerialPort.DataAvailable) then
+                    readData;
+          DATAOK:  begin
+                    fBlink:=not fBlink;
+                    if fBlink then
+                      sb.Panels[2].Text:='WAITING ..'
+                    else
+                      sb.Panels[2].Text:='WAITING .....';
+                    sb.Invalidate;
+                 end;
+          LOAD: leave:=true;
+       end;
+    until (leave);
+  end;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
@@ -195,6 +201,7 @@ var fileName: string;
 begin
   fileName:=copy(s,5,length(s)-6);
   if (FileExists(fPrgPath+'/cnc-data/'+fileName) ) then begin
+    fState:=LOAD;
     sb.Panels[2].Text:='LOAD F..';
     fData.Clear;
     Memo1.Lines.Clear;
@@ -208,8 +215,7 @@ begin
   end else begin
      sendStr('AANK01'+calcCheckSum('AANK01'));
      Label1.Caption:='ERR: NO FILE '+fileName;
-     fState:=INIT;
-     IdleTimer1.Enabled:=true;
+     reinit;
   end;
 end;
 
@@ -239,15 +245,8 @@ begin
    until ((i=fData.Count-1) or (fState=TIMEOUT));
    if (fState <> TIMEOUT) then begin
        sendStr('AAEF'+calcCheckSum('AAEF'));
-
    end;
-   while SerialPort.DataAvailable do
-     SerialPort.ReadData;
-
-   fState:=INIT;
-
-
-   IdleTimer1.Enabled:=true;
+   reinit;
 end;
 
 procedure TForm1.sendStr(s: string);
@@ -268,6 +267,7 @@ begin
    x1:=pos('A',fSerialAnswer);
    x2:=pos(#13,fSerialAnswer);
    if ((x1>0) and (x2>x1) ) then begin
+     fSerialAnswer:=copy(fSerialAnswer,x1,x2);
      if (checkData(fSerialAnswer)) then  begin
        if (copy(fSerialAnswer,3,2)='SE')then
           loadFile(s)
@@ -288,8 +288,22 @@ begin
       sb.Panels[0].Text:='CONNECTED'
    else
      sb.Panels[0].Text:='DISCONNECTED';
-   IdleTimer1.Enabled:=true;
    fState:=INIT;
+   while (SerialPort.DataAvailable) do
+     SerialPort.ReadData;
+   IdleTimer1.Enabled:=true;
+end;
+
+procedure TForm1.reinit;
+begin
+   Sleep(500);
+   while SerialPort.DataAvailable do  begin
+     SerialPort.ReadData;
+     Sleep(10);
+   end;
+   Memo2.Lines.Add('REINIT');
+   fState:=INIT;
+   IdleTimer1.Enabled:=true;
 end;
 
 end.
