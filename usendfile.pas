@@ -202,7 +202,7 @@ begin
   fileName:=copy(s,5,length(s)-6);
   if (FileExists(fPrgPath+'/cnc-data/'+fileName) ) then begin
     fState:=LOAD;
-    sb.Panels[2].Text:='LOAD F..';
+    sb.Panels[2].Text:='LOAD '+filename;
     fData.Clear;
     Memo1.Lines.Clear;
     Memo2.Lines.Clear;
@@ -224,28 +224,40 @@ var i: integer;
     dt: string;
 begin
    i:=0;
+   sb.Panels[2].Text:='SEND';
+   sb.Invalidate;
    dt:='AADA'+fData.Strings[i];
    sendStr(dt+calcCheckSum(dt));
+   Sleep(2);
    repeat
      case fState of
-        WAITING: if (SerialPort.DataAvailable) then
-                 readData;
+        WAITING: begin
+                   readData;
+                   Memo2.Lines.Add('ANSW: '+fSerialAnswer);
+        end;
         DATAOK:  begin
                    fBlink:=not fBlink;
                    if fBlink then
                      sb.Panels[2].Text:='SEND ..'
                    else
                      sb.Panels[2].Text:='SEND .....';
-                   sb.Invalidate;
+                   sb.invalidate;
                    inc(i);
                    dt:='AADA'+fData.Strings[i];
                    sendStr(dt+calcCheckSum(dt));
+                   Sleep(2);
                  end;
      end;
+     Memo2.Lines.Add(IntToStr(i)+':');
    until ((i=fData.Count-1) or (fState=TIMEOUT));
+   sb.Panels[2].Text:='SEND EOF';
+   sb.invalidate;
+   //Application.ProcessMessages;
    if (fState <> TIMEOUT) then begin
        sendStr('AAEF'+calcCheckSum('AAEF'));
    end;
+   sb.Panels[2].Text:='SEND ok';
+   sb.invalidate;
    reinit;
 end;
 
@@ -259,9 +271,10 @@ begin
 end;
 
 procedure TForm1.readData;
-var s: string;
+var s,s1: string;
     x1,x2: integer;
 begin
+   while not SerialPort.DataAvailable do;
    s:=SerialPort.ReadData;
    fSerialAnswer:=fSerialAnswer+s;
    x1:=pos('A',fSerialAnswer);
@@ -269,6 +282,7 @@ begin
    if ((x1>0) and (x2>x1) ) then begin
      fSerialAnswer:=copy(fSerialAnswer,x1,x2);
      if (checkData(fSerialAnswer)) then  begin
+       s1:=copy(fSerialAnswer,3,2);
        if (copy(fSerialAnswer,3,2)='SE')then
           loadFile(s)
        else if (copy(fSerialAnswer,3,2)='AK') then
@@ -289,19 +303,22 @@ begin
    else
      sb.Panels[0].Text:='DISCONNECTED';
    fState:=INIT;
-   while (SerialPort.DataAvailable) do
-     SerialPort.ReadData;
    IdleTimer1.Enabled:=true;
 end;
 
 procedure TForm1.reinit;
 begin
+   //SerialPort.Close;
+   //Connect;
+
    Sleep(500);
    while SerialPort.DataAvailable do  begin
      SerialPort.ReadData;
      Sleep(10);
    end;
+
    Memo2.Lines.Add('REINIT');
+   fSerialAnswer:='';
    fState:=INIT;
    IdleTimer1.Enabled:=true;
 end;
