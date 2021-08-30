@@ -28,7 +28,7 @@
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LazSerialPort"/>
+        <PackageName Value="laz_synapse"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
@@ -40,10 +40,9 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="usendfile.pas"/>
+        <Filename Value="utransferfile.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
-        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit1>
     </Units>

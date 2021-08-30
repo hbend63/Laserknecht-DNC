@@ -38,12 +38,6 @@ void loop() {
   {
       case INIT: {
           inputString="";
-          /*
-          digitalWrite(13,HIGH);
-          delay(1000);
-          digitalWrite(13,LOW);
-          delay(500);
-          */
           if (Serial.available()){
              char inChar = (char)Serial.read();
              if (inChar=='A')
@@ -69,18 +63,9 @@ void loop() {
         if (c==calcChecksum(s))
         {
           //Serial.println(s.substring(2,4));
-          /*
-          for (int i=0; i<3; i++)
-          {
-            digitalWrite(13,HIGH);
-            delay(300);
-            digitalWrite(13,LOW);
-            delay(300);
-          }
-          */
           if (s.substring(2,4)=="SE")
             sndString("ABAK");
-          else if (s.substring(2,4)=="AK");
+              //else if (s.substring(2,4)=="AK");
              //sndString("ABAK");            
           else if (s.substring(2,4)=="DA")
             sndString("ABAK"); 
