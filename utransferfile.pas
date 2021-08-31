@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ComCtrls, synaSer, IniFiles;
+  ComCtrls, Menus, synaSer, IniFiles, usetup, ufilelist;
 
 type
   TState = (CONNECTING, WAITSTART, LOADFILE, SENDDATA, ENDDATA, ERRFILE);
@@ -19,10 +19,16 @@ type
     Label3: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
+    mSetup: TMenuItem;
+    mFiles: TMenuItem;
+    PopupMenu1: TPopupMenu;
+    pb: TProgressBar;
     sb: TStatusBar;
     Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure mFilesClick(Sender: TObject);
+    procedure mSetupClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
     fSerialPort: TBlockSerial;
@@ -83,6 +89,26 @@ begin
   fSerialPort.Free;
 end;
 
+procedure TForm1.mFilesClick(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  with TfFiles.Create(self) do begin
+     ShowModal;
+     Release;
+  end;
+  Timer1.Enabled:=true;
+end;
+
+procedure TForm1.mSetupClick(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  with TfSetup.Create(self) do begin
+     ShowModal;
+     Release;
+  end;
+  Timer1.Enabled:=true;
+end;
+
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   case fState of
@@ -108,11 +134,15 @@ end;
 procedure TForm1.doSetup;
 var ini: TIniFile;
 begin
+    Timer1.Enabled:=false;
+    with TfSetup.Create(self) do begin
+       ShowModal;
+       release;
+    end;
     ini:=TIniFile.Create(fPrgPath+'/config.ini');
-    ini.WriteString('COM','PORTNAME','COM1');
+    fPortName:=ini.readString('COM','PORTNAME','');
     ini.Free;
-    ShowMessage('Please set Port in config.ini');
-    Application.Terminate;
+    Timer1.Enabled:=true;
 end;
 
 procedure TForm1.wait4Start;
@@ -142,6 +172,8 @@ begin
     Label1.Caption:='Inputfile: '+fFilename;
     Memo1.Lines.AddStrings(fCNCData);
     sendStr('AAAK'+calcCheckSum('AAAK'));
+    pb.Position:=0;
+    pb.Max:=fCNCData.Count;
     fState:=SENDDATA;
   end else
     fState:=ERRFILE;
@@ -226,6 +258,8 @@ begin
        if (copy(a,3,2)='AK') then
           inc(i);
     end;
+    if (i mod 10 = 0) then
+       pb.StepIt;
   until (i = fCNCData.Count-1);
   fState:=ENDDATA;
 end;
@@ -233,6 +267,7 @@ end;
 procedure TForm1.sendDataEnd;
 var a: string;
 begin
+  pb.Position:=pb.Max;
   sendStr('AAEF'+calcCheckSum('AAEF'));
   while (not fSerialPort.CanRead(10)) do;
     if (fSerialPort.LastError <> ErrTimeout) then

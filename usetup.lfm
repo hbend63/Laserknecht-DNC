@@ -1,0 +1,46 @@
+object fSetup: TfSetup
+  Left = 862
+  Height = 420
+  Top = 317
+  Width = 340
+  Caption = 'Setup'
+  ClientHeight = 420
+  ClientWidth = 340
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poOwnerFormCenter
+  LCLVersion = '2.0.12.0'
+  object ComboBox1: TComboBox
+    Left = 16
+    Height = 23
+    Top = 24
+    Width = 304
+    ItemHeight = 15
+    OnDropDown = ComboBox1DropDown
+    Style = csDropDownList
+    TabOrder = 0
+  end
+  object BitBtn1: TBitBtn
+    Left = 104
+    Height = 30
+    Top = 376
+    Width = 115
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    OnClick = BitBtn1Click
+    TabOrder = 1
+  end
+  object BitBtn2: TBitBtn
+    Left = 218
+    Height = 30
+    Top = 376
+    Width = 107
+    Cancel = True
+    DefaultCaption = True
+    Kind = bkCancel
+    ModalResult = 2
+    TabOrder = 2
+  end
+end
