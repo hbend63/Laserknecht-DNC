@@ -9,7 +9,7 @@ uses
   ComCtrls, Menus, synaSer, IniFiles, usetup, ufilelist;
 
 type
-  TState = (CONNECTING, WAITSTART, LOADFILE, SENDDATA, ENDDATA, ERRFILE);
+  TState = (CONNECTING, WAITSTART, LOADFILE, SAVEFILE, SENDDATA, ENDDATA, ERRFILE);
 
   { TForm1 }
 
@@ -40,6 +40,7 @@ type
     fFileName: string;
     procedure connect;
     procedure doSetup;
+    procedure saveDataFile;
     procedure wait4Start;
     procedure loadDataFile;
     function getSerialString: string;
@@ -115,6 +116,7 @@ begin
        CONNECTING  : connect;
        WAITSTART   : wait4Start;
        LOADFILE    : loadDataFile;
+       SAVEFILE    : saveDataFile;
        SENDDATA    : sendDataFile;
        ENDDATA     : sendDataEnd;
        ERRFILE     : showFileError;
@@ -153,10 +155,15 @@ begin
   if (fSerialPort.LastError<>ErrTimeout) then begin
     if not checkData(s) then exit;
     s1:=copy(s,3,2);
-    if (s1='SE' )then begin
+    if (s1='SE')then begin
        fAnswerString:=s;
        fState:=LOADFILE;
-    end;
+    end else if (s1='TS')then begin
+        sendStr('AATS'+calcCheckSum('AATS'));
+    end else if (s1='ST')then begin
+       fAnswerString:=s;
+       fState:=SAVEFILE;
+    end
   end;
 end;
 
@@ -179,6 +186,39 @@ begin
     fState:=ERRFILE;
 end;
 
+procedure TForm1.saveDataFile;
+var fileName, a, com, ccom: string;
+    fertig: boolean;
+begin
+  fileName:=copy(fAnswerString,5,length(fAnswerString)-6);
+  if (FileExists(fPrgPath+'/cnc-data/'+fileName) ) then
+     sendStr('AANK'+calcCheckSum('AANK'))
+  else
+  begin
+    Label1.Caption:='Outputfile: '+fFilename;
+    Label1.Invalidate;
+    sendStr('AAAK'+calcCheckSum('AAAK'));
+    Memo1.Lines.Clear;
+    Memo2.Lines.Clear;
+    fertig:=false;
+    repeat
+      Sleep(50);
+      a:=getSerialString;
+      com := copy(a,3,2);
+      if (com='DA') then begin
+        ccom:=copy(a,5,length(a)-6);
+        Memo1.Lines.Add(ccom);
+        sendStr('AAAK'+calcCheckSum('AAAK'))
+      end
+      else if (com='EF') then
+         fertig:=true;
+    until fertig;
+    sendStr('AAAK'+calcCheckSum('AAAK'));
+    Memo1.Lines.SaveToFile(fPrgPath+'/cnc-data/'+fileName);
+  end;
+  fState:=WAITSTART;
+end;
+
 function TForm1.getSerialString: string;
 var s: string;
     c: char;
@@ -188,6 +228,7 @@ begin
   s:='';
   sEnd:=false;
   sStart:=false;
+  //while (fSerialPort.WaitingData=0) do;
   n:= fSerialPort.WaitingData;
   i:=0;
   while ((i < n) and not sEnd) do begin
@@ -251,34 +292,26 @@ begin
   repeat
     s:='AADA'+fCNCData.Strings[i];
     sendStr(s+calcCheckSum(s));
-    while (not fSerialPort.CanRead(10)) do;
-    if (fSerialPort.LastError <> ErrTimeout) then begin
-      a:=getSerialString;
-      if (checkData(a)) then
+    fSerialPort.Flush;
+    Sleep(50);
+    a:=getSerialString;
+    if (checkData(a)) then
        if (copy(a,3,2)='AK') then
           inc(i);
-    end;
+
     if (i mod 10 = 0) then
        pb.StepIt;
-  until (i = fCNCData.Count-1);
+  until (i = fCNCData.Count);
   fState:=ENDDATA;
 end;
 
 procedure TForm1.sendDataEnd;
-var a: string;
+
 begin
   pb.Position:=pb.Max;
   sendStr('AAEF'+calcCheckSum('AAEF'));
-  while (not fSerialPort.CanRead(10)) do;
-    if (fSerialPort.LastError <> ErrTimeout) then
-      a:=getSerialString;
-    if (checkData(a)) then
-       if (copy(a,3,2)='AK') then begin
-         sb.Panels[2].Text:='SEND '+fFilename+' OK';
-         fSerialPort.Flush;
-         fSerialPort.Purge;
-         fState:=WAITSTART;
-       end;
+  fSerialPort.CloseSocket;
+  Connect;
 end;
 
 procedure TForm1.showFileError;
@@ -293,8 +326,6 @@ begin
    fSerialPort.SendString(s+chr($D));
    Memo2.Lines.Add('TX: '+s);
 end;
-
-
 
 
 end.
