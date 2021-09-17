@@ -195,7 +195,7 @@ begin
      sendStr('AANK'+calcCheckSum('AANK'))
   else
   begin
-    Label1.Caption:='Outputfile: '+fFilename;
+    Label1.Caption:='Outputfile: '+fileName;
     Label1.Invalidate;
     sendStr('AAAK'+calcCheckSum('AAAK'));
     Memo1.Lines.Clear;
@@ -215,6 +215,7 @@ begin
     until fertig;
     sendStr('AAAK'+calcCheckSum('AAAK'));
     Memo1.Lines.SaveToFile(fPrgPath+'/cnc-data/'+fileName);
+    sb.Panels[2].Text:='RECEIVED '+fileName;
   end;
   fState:=WAITSTART;
 end;
@@ -228,7 +229,6 @@ begin
   s:='';
   sEnd:=false;
   sStart:=false;
-  //while (fSerialPort.WaitingData=0) do;
   n:= fSerialPort.WaitingData;
   i:=0;
   while ((i < n) and not sEnd) do begin
