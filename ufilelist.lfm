@@ -1,0 +1,21 @@
+object fFiles: TfFiles
+  Left = 854
+  Height = 528
+  Top = 97
+  Width = 456
+  Caption = 'Files'
+  ClientHeight = 528
+  ClientWidth = 456
+  OnCreate = FormCreate
+  Position = poOwnerFormCenter
+  LCLVersion = '2.0.12.0'
+  object ListBox1: TListBox
+    Left = 0
+    Height = 528
+    Top = 0
+    Width = 456
+    Align = alClient
+    ItemHeight = 0
+    TabOrder = 0
+  end
+end
