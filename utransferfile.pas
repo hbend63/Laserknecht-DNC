@@ -9,7 +9,7 @@ uses
   ComCtrls, Menus, synaSer, IniFiles, usetup, ufilelist;
 
 type
-  TState = (CONNECTING, WAITSTART, LOADFILE, SAVEFILE, SENDDATA, ENDDATA, ERRFILE);
+  TState = (CONNECTING, WAITSTART, LOADFILE, SAVEFILE, SENDDATA, ENDDATA, ERRFILE, ERRCOMMUNICATION);
 
   { TForm1 }
 
@@ -49,6 +49,7 @@ type
     procedure sendDataFile;
     procedure sendDataEnd;
     procedure showFileError;
+    procedure showTimeoutError;
     procedure sendStr(s: string);
   public
 
@@ -120,6 +121,7 @@ begin
        SENDDATA    : sendDataFile;
        ENDDATA     : sendDataEnd;
        ERRFILE     : showFileError;
+       ERRCOMMUNICATION  : showTimeoutError;
    end;
 end;
 
@@ -283,25 +285,35 @@ begin
 end;
 
 procedure TForm1.sendDataFile;
-var i: integer;
+var i, fc: integer;
     s,a: string;
 begin
   sb.Panels[2].Text:='SEND '+fFilename;
   Application.ProcessMessages;
   i:=0;
+  fc:=0;
   repeat
     s:='AADA'+fCNCData.Strings[i];
     sendStr(s+calcCheckSum(s));
     fSerialPort.Flush;
     Sleep(50);
     a:=getSerialString;
-    if (checkData(a)) then
+    if (checkData(a)) then begin
        if (copy(a,3,2)='AK') then
+       begin
           inc(i);
-
+          fc:=0;
+       end else if (copy(a,3,2)='NK') then
+         inc(fc);
+    end;
+    if fc > 3 then begin
+      //i:=fCNCData.Count;
+      Memo2.Lines.Add('ERROR: TIMOUT OR COMMUNICATION PROBLEM DETECTED ');
+      fState:=ERRCOMMUNICATION;
+    end;
     if (i mod 10 = 0) then
        pb.StepIt;
-  until (i = fCNCData.Count);
+  until ((i = fCNCData.Count) or (fState = ERRCOMMUNICATION));
   fState:=ENDDATA;
 end;
 
@@ -318,7 +330,15 @@ procedure TForm1.showFileError;
 begin
   sendStr('AANK01'+calcCheckSum('AANK01'));
   Label1.Caption:='ERR: NO FILE '+fFileName;
-  fState:=WAITSTART;
+  fState:=ENDDATA;
+end;
+
+procedure TForm1.showTimeoutError;
+begin
+  sendStr('AANK01'+calcCheckSum('AANK01'));
+
+  MessageDlg('ERROR','TIMEOUT',mtError,[mbOK],0);
+  fState:=ENDDATA;
 end;
 
 procedure TForm1.sendStr(s: string);

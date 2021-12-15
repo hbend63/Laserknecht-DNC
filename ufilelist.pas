@@ -5,7 +5,8 @@ unit ufilelist;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, FileUtil;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, uffileview,
+  FileUtil;
 
 type
 
@@ -13,7 +14,9 @@ type
 
   TfFiles = class(TForm)
     ListBox1: TListBox;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure ListBox1DblClick(Sender: TObject);
   private
     fprgPath: string;
     procedure getFiles;
@@ -34,6 +37,23 @@ procedure TfFiles.FormCreate(Sender: TObject);
 begin
   fPrgPath:=ExtractFilePath(Application.exeName);
   getFiles;
+end;
+
+procedure TfFiles.ListBox1DblClick(Sender: TObject);
+var strings: TStringList;
+begin
+  strings:=TStringList.Create;
+  strings.LoadFromFile(fPrgPath+'/cnc-data/'+ListBox1.GetSelectedText);
+  with TformFileView.Create(self) do begin
+    Open(strings);
+    ShowModal;
+    release;
+  end;
+end;
+
+procedure TfFiles.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  //CloseAction:=caFree;
 end;
 
 procedure TfFiles.getFiles;

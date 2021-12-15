@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, utransferfile, usetup, ufilelist
+  Forms, utransferfile, usetup, ufilelist, uffileview
   { you can add units after this };
 
 {$R *.res}
@@ -19,6 +19,7 @@ begin
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TfSetup, fSetup);
   Application.CreateForm(TfFiles, fFiles);
+  Application.CreateForm(TformFileView, formFileView);
   Application.Run;
 end.
 

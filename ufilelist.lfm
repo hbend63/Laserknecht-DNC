@@ -6,6 +6,7 @@ object fFiles: TfFiles
   Caption = 'Files'
   ClientHeight = 528
   ClientWidth = 456
+  OnClose = FormClose
   OnCreate = FormCreate
   Position = poOwnerFormCenter
   LCLVersion = '2.0.12.0'
@@ -16,6 +17,7 @@ object fFiles: TfFiles
     Width = 456
     Align = alClient
     ItemHeight = 0
+    OnDblClick = ListBox1DblClick
     TabOrder = 0
   end
 end
