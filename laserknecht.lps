@@ -20,7 +20,6 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="299"/>
         <CursorPos X="3" Y="324"/>
         <UsageCount Value="29"/>
@@ -53,13 +52,26 @@
         <LoadedDesigner Value="True"/>
       </Unit3>
       <Unit4>
+        <Filename Value="uffileview.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="formFileView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="47" Y="10"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit4>
+      <Unit5>
         <Filename Value="C:\Users\bender\AppData\Local\lazarus\onlinepackagemanager\packages\synapse40.1\synaser.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1812"/>
         <CursorPos Y="1847"/>
         <UsageCount Value="11"/>
-      </Unit4>
-      <Unit5>
+      </Unit5>
+      <Unit6>
         <Filename Value="usendfile.pas"/>
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
@@ -68,32 +80,21 @@
         <TopLine Value="163"/>
         <CursorPos X="55" Y="188"/>
         <UsageCount Value="10"/>
-      </Unit5>
-      <Unit6>
+      </Unit6>
+      <Unit7>
         <Filename Value="C:\PRO-NC\PP\LSS Anlage_neu.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="19"/>
         <UsageCount Value="10"/>
-      </Unit6>
-      <Unit7>
+      </Unit7>
+      <Unit8>
         <Filename Value="C:\PRO-NC\PP\PP_Ursprünglich\LSS Anlage_neu.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <UsageCount Value="10"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="uffileview.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="formFileView"/>
-        <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="1"/>
-        <CursorPos X="47" Y="10"/>
-        <UsageCount Value="21"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit8>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="29" HistoryIndex="28">
       <Position1>
         <Filename Value="utransferfile.pas"/>
         <Caret Line="216" Column="5" TopLine="183"/>
@@ -103,117 +104,113 @@
         <Caret Line="196" Column="39" TopLine="186"/>
       </Position2>
       <Position3>
-        <Filename Value="utransferfile.pas"/>
-        <Caret Line="164" Column="31" TopLine="271"/>
-      </Position3>
-      <Position4>
         <Filename Value="ufilelist.pas"/>
         <Caret Line="54" Column="61" TopLine="20"/>
+      </Position3>
+      <Position4>
+        <Filename Value="utransferfile.pas"/>
+        <Caret Line="297" TopLine="273"/>
       </Position4>
       <Position5>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="297" TopLine="273"/>
+        <Caret Line="307" Column="25" TopLine="276"/>
       </Position5>
       <Position6>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" Column="25" TopLine="276"/>
+        <Caret Line="298" TopLine="276"/>
       </Position6>
       <Position7>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="298" TopLine="276"/>
+        <Caret Line="299" TopLine="276"/>
       </Position7>
       <Position8>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="299" TopLine="276"/>
+        <Caret Line="307" TopLine="279"/>
       </Position8>
       <Position9>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" TopLine="279"/>
+        <Caret Line="312" TopLine="284"/>
       </Position9>
       <Position10>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="312" TopLine="284"/>
+        <Caret Line="307" Column="22" TopLine="291"/>
       </Position10>
       <Position11>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" Column="22" TopLine="291"/>
+        <Caret Line="298" TopLine="291"/>
       </Position11>
       <Position12>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="298" TopLine="291"/>
+        <Caret Line="307" TopLine="291"/>
       </Position12>
       <Position13>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" TopLine="291"/>
+        <Caret Line="298" TopLine="291"/>
       </Position13>
       <Position14>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="298" TopLine="291"/>
+        <Caret Line="307" TopLine="291"/>
       </Position14>
       <Position15>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" TopLine="291"/>
+        <Caret Line="298" TopLine="291"/>
       </Position15>
       <Position16>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="298" TopLine="291"/>
+        <Caret Line="307" TopLine="291"/>
       </Position16>
       <Position17>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" TopLine="291"/>
+        <Caret Line="298" TopLine="291"/>
       </Position17>
       <Position18>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="298" TopLine="291"/>
+        <Caret Line="307" TopLine="291"/>
       </Position18>
       <Position19>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="307" TopLine="291"/>
+        <Caret Line="308" TopLine="291"/>
       </Position19>
       <Position20>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="308" TopLine="291"/>
+        <Caret Line="310" TopLine="291"/>
       </Position20>
       <Position21>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="310" TopLine="291"/>
+        <Caret Line="311" TopLine="291"/>
       </Position21>
       <Position22>
-        <Filename Value="utransferfile.pas"/>
-        <Caret Line="311" TopLine="291"/>
-      </Position22>
-      <Position23>
         <Filename Value="ufilelist.pas"/>
         <Caret Line="48" Column="5" TopLine="28"/>
-      </Position23>
-      <Position24>
+      </Position22>
+      <Position23>
         <Filename Value="uffileview.pas"/>
         <Caret Line="19" Column="41"/>
+      </Position23>
+      <Position24>
+        <Filename Value="utransferfile.pas"/>
+        <Caret Line="52" Column="32" TopLine="39"/>
       </Position24>
       <Position25>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="52" Column="32" TopLine="39"/>
+        <Caret Line="341" Column="24" TopLine="315"/>
       </Position25>
       <Position26>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="341" Column="24" TopLine="315"/>
+        <Caret Line="52" Column="17" TopLine="27"/>
       </Position26>
       <Position27>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="52" Column="17" TopLine="27"/>
+        <Caret Line="338" Column="3" TopLine="318"/>
       </Position27>
       <Position28>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="338" Column="3" TopLine="318"/>
+        <Caret Line="124" Column="30" TopLine="107"/>
       </Position28>
       <Position29>
         <Filename Value="utransferfile.pas"/>
-        <Caret Line="124" Column="30" TopLine="107"/>
-      </Position29>
-      <Position30>
-        <Filename Value="utransferfile.pas"/>
         <Caret Line="157" Column="28"/>
-      </Position30>
+      </Position29>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
